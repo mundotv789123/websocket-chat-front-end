@@ -1,0 +1,49 @@
+<nav class="navbar bg-body-tertiary mb-4">
+  <div class="container-fluid">
+    <span class="navbar-brand">LiveChat 1.0.0</span>
+    <button type="button" class="btn btn-sm btn-primary nav-iten" data-bs-toggle="modal" data-bs-target="#inputUsernameModal" id="usernameButton">
+      change username
+    </button>
+  </div>
+</nav>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 mx-auto my-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">Messages</h5>
+        </div>
+        <div class="card-body overflow-y-scroll" style="height: 350px;">
+          <app-message *ngFor="let message of messages" [message]="message" />
+        </div>
+        <div class="card-footer">
+          <form>
+            <div class="input-group">
+              <textarea class="rounded-2 form-control" rows="{{textareaRow}}" (input)="updateRows($event)" style="resize: none;"></textarea>
+              <div>
+                <button class="btn btn-sm btn-secondary rounded-circle ms-2"><i class="bi bi-send"></i></button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="inputUsernameModal" aria-hidden="true" aria-labelledby="inputUsernameModal" data-bs-backdrop="static" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="inputUsernameModal">Login</h1>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+        <input class="form-control" id="usernameInput" placeholder="username" [value]="username"/>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" (click)="saveUsername()" data-bs-dismiss="modal">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
