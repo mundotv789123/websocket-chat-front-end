@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-
-export interface Message {
-  author: string,
-  message: string,
-  me: boolean
-}
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Message, WebsocketService } from './services/websocket.service';
 
 @Component({
   selector: 'app-root',
@@ -13,36 +8,39 @@ export interface Message {
 })
 
 export class AppComponent implements OnInit {
+  websocketService: WebsocketService;
   messages: Message[] = [];
   username: string | null = null;
   textareaRow: number = 1;
 
   formGroup: FormGroup = new FormGroup({
-    message: new FormControl()
+    message: new FormControl('', [Validators.required])
   });
 
-  constructor() { }
+  constructor(websocketService:WebsocketService) { this.websocketService = websocketService }
 
   ngOnInit() {
-    this.messages = [
-      {
-        author: "user1",
-        message: "Hello world",
-        me: false
-      },
-      {
-        author: "user2",
-        message: "hi!",
-        me: true
-      },
-      {
-        author: "user1",
-        message: "teste a long message for exemple, \n break line, and <special> characteres",
-        me: false
-      }
-    ]
     this.username = localStorage.getItem("username");
     this.checkUsername();
+
+    this.websocketService.onMessage = (message: Message) => {
+      message.me = message.author == this.username;
+      this.messages.push(message)
+    };
+
+    /* teste */
+    this.websocketService.sendMessage({
+      author: "user1",
+      message: "Hello world",
+    });
+    this.websocketService.sendMessage({
+      author: "user2",
+      message: "hi!",
+    });
+    this.websocketService.sendMessage({
+      author: "user1",
+      message: "teste a long message for exemple, \n break line, and <special> characteres",
+    });
   }
 
   saveUsername() {
@@ -67,14 +65,12 @@ export class AppComponent implements OnInit {
   }
  
   sendMessage() {
-    if (!this.checkUsername())
+    if (!this.username || !this.checkUsername() || !this.formGroup.valid)
       return
+
     let message = this.formGroup.controls['message'].value
-    this.messages.push({
-      author: this.username ?? "unknow",
-      message: message,
-      me: true
-    })
+    this.websocketService.sendMessage({author: this.username, message: message});
+
     this.formGroup.controls['message'].reset();
     this.updateRows();
   }

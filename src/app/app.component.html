@@ -13,13 +13,13 @@
         <div class="card-header">
           <h5 class="card-title">Messages</h5>
         </div>
-        <div class="card-body overflow-y-scroll" style="height: 350px;">
+        <div class="card-body overflow-y-scroll" style="height: 400px;">
           <app-message *ngFor="let message of messages" [message]="message" />
         </div>
         <div class="card-footer">
           <form [formGroup]="formGroup" (submit)="sendMessage()">
             <div class="input-group">
-              <textarea class="rounded-2 form-control" rows="{{textareaRow}}" (input)="updateRows()" style="resize: none;" formControlName="message"></textarea>
+              <textarea class="rounded-2 form-control" rows="{{textareaRow}}" (input)="updateRows()" style="resize: none;" formControlName="message" required></textarea>
               <div>
                 <button class="btn btn-sm btn-secondary rounded-circle ms-2"><i class="bi bi-send"></i></button>
               </div>
@@ -38,7 +38,7 @@
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <input class="form-control" id="usernameInput" placeholder="username" [value]="username" />
+          <input class="form-control" id="usernameInput" placeholder="username" [value]="username" required/>
         </div>
       </div>
       <div class="modal-footer">
