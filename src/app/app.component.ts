@@ -8,10 +8,12 @@ import { Message, WebsocketService } from './services/websocket.service';
 })
 
 export class AppComponent implements OnInit {
-  websocketService: WebsocketService;
+  connected:boolean = false;
   messages: Message[] = [];
   username: string | null = null;
   textareaRow: number = 1;
+
+  private websocketService: WebsocketService;
 
   formGroup: FormGroup = new FormGroup({
     message: new FormControl('', [Validators.required])
@@ -27,20 +29,9 @@ export class AppComponent implements OnInit {
       message.me = message.author == this.username;
       this.messages.push(message)
     };
+    this.websocketService.onConnect = () => (this.connected = true);
 
-    /* teste */
-    this.websocketService.sendMessage({
-      author: "user1",
-      message: "Hello world",
-    });
-    this.websocketService.sendMessage({
-      author: "user2",
-      message: "hi!",
-    });
-    this.websocketService.sendMessage({
-      author: "user1",
-      message: "teste a long message for exemple, \n break line, and <special> characteres",
-    });
+    this.websocketService.openConnection();
   }
 
   saveUsername() {
