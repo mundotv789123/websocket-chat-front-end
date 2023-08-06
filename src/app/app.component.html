@@ -17,9 +17,9 @@
           <app-message *ngFor="let message of messages" [message]="message" />
         </div>
         <div class="card-footer">
-          <form>
+          <form [formGroup]="formGroup" (submit)="sendMessage()">
             <div class="input-group">
-              <textarea class="rounded-2 form-control" rows="{{textareaRow}}" (input)="updateRows($event)" style="resize: none;"></textarea>
+              <textarea class="rounded-2 form-control" rows="{{textareaRow}}" (input)="updateRows()" style="resize: none;" formControlName="message"></textarea>
               <div>
                 <button class="btn btn-sm btn-secondary rounded-circle ms-2"><i class="bi bi-send"></i></button>
               </div>

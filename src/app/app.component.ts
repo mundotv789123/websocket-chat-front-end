@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 
 export interface Message {
   author: string,
@@ -16,6 +17,10 @@ export class AppComponent implements OnInit {
   messages: Message[] = [];
   username: string | null = null;
   textareaRow: number = 1;
+
+  formGroup: FormGroup = new FormGroup({
+    message: new FormControl()
+  });
 
   constructor() { }
 
@@ -57,12 +62,21 @@ export class AppComponent implements OnInit {
     return true;
   }
 
-  updateRows(element: any) {
-    let text: string = element?.target?.value;
-    if (text)
-      this.textareaRow = text.split("\n").length;
-    else
-      this.textareaRow = 1
+  updateRows() {
+    let text: string = this.formGroup.controls['message'].value;
+    this.textareaRow = text ? text.split("\n").length : 1;
   }
-  
+ 
+  sendMessage() {
+    if (!this.checkUsername())
+      return
+    let message = this.formGroup.controls['message'].value
+    this.messages.push({
+      author: this.username ?? "unknow",
+      message: message,
+      me: true
+    })
+    this.formGroup.controls['message'].reset();
+    this.updateRows();
+  }
 }
