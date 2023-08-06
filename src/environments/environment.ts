@@ -1,4 +1,5 @@
 export const environment = {
     websocketUrl: "ws://localhost:8080/ws",
-    websocketChannelBroker: ""
+    websocketTopicMessageChannel: "/topic/chat",
+    websocketAppMessageChannel: "/app/message"
 };

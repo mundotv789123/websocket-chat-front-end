@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Client, Stomp } from '@stomp/stompjs';
+import { Client } from '@stomp/stompjs';
 import { environment } from 'src/environments/environment';
 
 export interface Message {
@@ -7,8 +7,6 @@ export interface Message {
   message: string,
   me?: boolean
 }
-
-const TOPIC: string = "/topic/messages" //TODO tira isso daí
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +23,7 @@ export class WebsocketService {
       brokerURL: environment.websocketUrl,
       onConnect: () => {
         if (this.onConnect) this.onConnect();
-        this.client.subscribe(TOPIC, message => {
+        this.client.subscribe(environment.websocketTopicMessageChannel, message => {
           if (this.onMessage) this.onMessage(JSON.parse(message.body));
         });
       }
@@ -38,7 +36,7 @@ export class WebsocketService {
 
   sendMessage(message: Message) {
     if (this.client.connected)
-      this.client.publish({ destination: TOPIC, body: JSON.stringify(message) });
+      this.client.publish({ destination: environment.websocketAppMessageChannel, body: JSON.stringify(message) });
   }
   
 }
