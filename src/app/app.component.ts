@@ -9,8 +9,7 @@ export interface Message {
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  templateUrl: './app.component.html'
 })
 
 export class AppComponent implements OnInit {

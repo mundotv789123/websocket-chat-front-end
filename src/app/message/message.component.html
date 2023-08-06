@@ -1,9 +1,9 @@
 <div class="ms-3" *ngIf="message.me">
-    <span class="text-secondary">{{message.author}}</span>
+    <span class="text-muted">{{message.author}}</span>
     <p class="bg-info p-2 rounded-2" style="white-space: pre-line">{{message.message}}</p>
 </div>
 
 <div class="me-3" *ngIf="!message.me">
-    <span class="text-secondary">{{message.author}}</span>
+    <span class="text-muted">{{message.author}}</span>
     <p class="bg-warning p-2 rounded-2" style="white-space: pre-line">{{message.message}}</p>
 </div>
