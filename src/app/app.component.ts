@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Message, WebsocketService } from './services/websocket.service';
 
@@ -8,9 +8,11 @@ import { Message, WebsocketService } from './services/websocket.service';
 })
 
 export class AppComponent implements OnInit {
+  @ViewChild('usernameButton') usernameButton!: ElementRef<HTMLButtonElement>;
+  @ViewChild('audioNotification') audioNotification!: ElementRef<HTMLAudioElement>;
+
   connected:boolean = false;
   messages: Message[] = [];
-  username: string | null = null;
   textareaRow: number = 1;
 
   private websocketService: WebsocketService;
@@ -22,29 +24,25 @@ export class AppComponent implements OnInit {
   constructor(websocketService:WebsocketService) { this.websocketService = websocketService }
 
   ngOnInit() {
-    this.username = localStorage.getItem("username");
     this.checkUsername();
-
+    
     this.websocketService.onMessage = (message: Message) => {
-      message.me = message.author == this.username;
-      this.messages.push(message)
+      message.me = (message.author == localStorage.getItem('username'));
+      this.messages.push(message);
+      if (!message.me) {
+        this.playNotification();
+      }
     };
     this.websocketService.onConnect = () => (this.connected = true);
 
     this.websocketService.openConnection();
   }
 
-  saveUsername() {
-    let element:any = document.getElementById("usernameInput");
-    this.username = element?.value;
-    if (this.username != null)
-      localStorage.setItem("username", this.username); 
-  }
-
   checkUsername(): boolean {
-    if (this.username == null || this.username == "") {
-      let usernameButtom: any = document.getElementById("usernameButton");
-      usernameButtom.click();
+    let username = localStorage.getItem("username");
+    if (username == null || username == "") {
+      if (this.usernameButton) 
+        this.usernameButton.nativeElement.click();
       return false;
     }
     return true;
@@ -56,13 +54,22 @@ export class AppComponent implements OnInit {
   }
  
   sendMessage() {
-    if (!this.username || !this.checkUsername() || !this.formGroup.valid)
-      return
+    if (!this.checkUsername() || !this.formGroup.valid)
+      return;
 
-    let message = this.formGroup.controls['message'].value
-    this.websocketService.sendMessage({author: this.username, message: message});
+    let username: string = localStorage.getItem("username") ?? "";
+
+    let message = this.formGroup.controls['message'].value;
+    this.websocketService.sendMessage({author: username, message: message});
 
     this.formGroup.controls['message'].reset();
     this.updateRows();
+  }
+
+  playNotification() {
+    if (this.audioNotification) {
+      this.audioNotification.nativeElement.currentTime = 0;
+      this.audioNotification.nativeElement.play();
+    }
   }
 }

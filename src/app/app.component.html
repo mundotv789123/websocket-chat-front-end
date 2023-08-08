@@ -1,7 +1,7 @@
 <nav class="navbar bg-body-tertiary mb-4">
   <div class="container-fluid">
     <span class="navbar-brand">LiveChat <small class="text-muted">v1.0.0</small></span>
-      <button type="button" class="btn btn-small btn-primary nav-iten me-3" data-bs-toggle="modal" data-bs-target="#inputUsernameModal" id="usernameButton">
+      <button type="button" class="btn btn-small btn-primary nav-iten me-3" data-bs-toggle="modal" data-bs-target="#inputUsernameModal" #usernameButton>
         change username
       </button>
   </div>
@@ -33,20 +33,5 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="inputUsernameModal" aria-hidden="true" aria-labelledby="inputUsernameModal" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="inputUsernameModal">Change username</h1>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <input class="form-control" id="usernameInput" placeholder="username" [value]="username" required/>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" (click)="saveUsername()" data-bs-dismiss="modal">Continue</button>
-      </div>
-    </div>
-  </div>
-</div>
+<app-username-form />
+<audio #audioNotification class="d-none" src="assets/songs/notification.mp3"></audio>
