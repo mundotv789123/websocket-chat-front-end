@@ -8,35 +8,50 @@ export interface Message {
   me?: boolean
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class WebsocketService {
 
-  onMessage: Function | null = null;
-  onConnect: Function | null = null;
+  public onMessage: Function | null = null;
+  public onConnect: Function | null = null;
+  public onError: Function | null = null;
   
   private client: Client;
 
   constructor() {
     this.client = new Client({
       brokerURL: environment.websocketUrl,
+      connectionTimeout: 5000,
+      reconnectDelay: 15,
       onConnect: () => {
-        if (this.onConnect) this.onConnect();
+        if (this.onConnect) {
+          this.onConnect();
+        }
         this.client.subscribe(environment.websocketTopicMessageChannel, message => {
-          if (this.onMessage) this.onMessage(JSON.parse(message.body));
+          if (this.onMessage) {
+            this.onMessage(JSON.parse(message.body));
+          }
         });
+      },
+      onWebSocketError: (error) => {
+        if (this.onError) {
+          this.onError(error)
+        }
       }
     });
   }
 
   openConnection() {
-    return this.client.activate();
+    this.client.activate();
   }
 
   sendMessage(message: Message) {
-    if (this.client.connected)
-      this.client.publish({ destination: environment.websocketAppMessageChannel, body: JSON.stringify(message) });
+    if (!this.client.connected) {
+      return;
+    }
+    this.client.publish({ 
+      destination: environment.websocketAppMessageChannel, 
+      body: JSON.stringify(message) 
+    });
   }
   
 }

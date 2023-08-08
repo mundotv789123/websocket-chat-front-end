@@ -14,7 +14,10 @@
           <h5 class="card-title">Messages</h5>
         </div>
         <div class="card-body overflow-y-scroll" style="height: 400px;">
-          <div class="d-flex h-100" *ngIf="!connected">
+          <div class="d-flex flex-column h-100" *ngIf="!connected">
+            <div class="alert alert-danger p-2" role="alert" *ngIf="error">
+              {{error}}
+            </div>
             <div class="spinner-border text-primary m-auto"></div>
           </div>
           <app-message *ngFor="let message of messages" [message]="message" />

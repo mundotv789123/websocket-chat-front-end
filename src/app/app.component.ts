@@ -12,6 +12,8 @@ export class AppComponent implements OnInit {
   @ViewChild('audioNotification') private audioNotification!: ElementRef<HTMLAudioElement>;
 
   public connected: boolean = false;
+  public error: string | false = false;
+  
   public messages: Message[] = [];
   public textareaRow: number = 1;
 
@@ -27,7 +29,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.checkUsername();
-    
+    this.loadWebsocketListeners();
+    this.websocketService.openConnection();
+  }
+
+  loadWebsocketListeners() {
     this.websocketService.onMessage = (message: Message) => {
       message.me = (message.author == localStorage.getItem('username'));
       this.messages.push(message);
@@ -35,9 +41,14 @@ export class AppComponent implements OnInit {
         this.playNotification();
       }
     };
-    this.websocketService.onConnect = () => (this.connected = true);
-
-    this.websocketService.openConnection();
+    this.websocketService.onConnect = () => {
+      this.connected = true;
+      this.error = false;
+    };
+    this.websocketService.onError = () => {
+      this.connected = false;
+      this.error = "Conexão perdida...";
+    };
   }
 
   checkUsername(): boolean {
