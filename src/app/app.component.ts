@@ -8,20 +8,22 @@ import { Message, WebsocketService } from './services/websocket.service';
 })
 
 export class AppComponent implements OnInit {
-  @ViewChild('usernameButton') usernameButton!: ElementRef<HTMLButtonElement>;
-  @ViewChild('audioNotification') audioNotification!: ElementRef<HTMLAudioElement>;
+  @ViewChild('usernameButton') private usernameButton!: ElementRef<HTMLButtonElement>;
+  @ViewChild('audioNotification') private audioNotification!: ElementRef<HTMLAudioElement>;
 
-  connected:boolean = false;
-  messages: Message[] = [];
-  textareaRow: number = 1;
+  public connected: boolean = false;
+  public messages: Message[] = [];
+  public textareaRow: number = 1;
 
+  public formGroup: FormGroup;
   private websocketService: WebsocketService;
 
-  formGroup: FormGroup = new FormGroup({
-    message: new FormControl('', [Validators.required])
-  });
-
-  constructor(websocketService:WebsocketService) { this.websocketService = websocketService }
+  constructor(websocketService:WebsocketService) { 
+    this.websocketService = websocketService;
+    this.formGroup = new FormGroup({
+      message: new FormControl('', [Validators.required])
+    });
+  }
 
   ngOnInit() {
     this.checkUsername();
