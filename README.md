@@ -2,5 +2,8 @@
 
 ### Demonstração
 
-![](docs/desmontrando-sistema.gif)
+![](docs/demo-using.gif)
 
+### Demonstração Erro
+
+![](docs/demo-error.gif)
