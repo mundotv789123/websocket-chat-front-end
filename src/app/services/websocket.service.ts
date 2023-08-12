@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 export interface Message {
   author: string,
   message: string,
+  createdAt?: Date,
   me?: boolean
 }
 
