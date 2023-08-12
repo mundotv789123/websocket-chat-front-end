@@ -20,7 +20,9 @@
             </div>
             <div class="spinner-border text-primary m-auto"></div>
           </div>
-          <app-message *ngFor="let message of messages" [message]="message" />
+          <div *ngIf="connected">
+            <app-message *ngFor="let message of messages" [message]="message" />
+          </div>
         </div>
         <div class="card-footer">
           <form [formGroup]="formGroup" (submit)="sendMessage()">
