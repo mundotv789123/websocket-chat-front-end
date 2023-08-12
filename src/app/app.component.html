@@ -21,7 +21,7 @@
             </div>
             <div class="spinner-border text-primary m-auto"></div>
           </div>
-          <app-message *ngFor="let message of (connected ? messages.reverse() : [])" [message]="message" />
+          <app-message *ngFor="let message of messages" [message]="message" />
         </div>
         <div class="card-footer">
           <form [formGroup]="formGroup" (submit)="sendMessage()">

@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
   loadWebsocketListeners() {
     this.websocketService.onMessage = (message: Message) => {
       message.me = (message.author == localStorage.getItem('username'));
-      this.messages.push(message);
+      this.messages.unshift(message);
       if (!message.me) {
         this.playNotification();
       }
