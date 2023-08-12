@@ -1,17 +1,17 @@
 <div class="modal fade" id="inputUsernameModal" aria-hidden="true" aria-labelledby="inputUsernameModal" data-bs-backdrop="static" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+    <form class="modal-content" [formGroup]="formGroup" (submit)="onSubmit()">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="inputUsernameModal">Change username</h1>
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <input class="form-control" id="usernameInput" placeholder="username" [value]="username" required />
+          <input class="form-control" id="usernameInput" placeholder="username" [value]="username" required formControlName="username" />
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-primary" (click)="saveUsername()" data-bs-dismiss="modal">Continue</button>
+        <button class="btn btn-primary" data-bs-dismiss="modal">Continue</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>

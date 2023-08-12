@@ -1,9 +1,10 @@
 <nav class="navbar bg-body-tertiary mb-4">
   <div class="container-fluid">
     <span class="navbar-brand">LiveChat <small class="text-muted">v1.0.0</small></span>
-      <button type="button" class="btn btn-small btn-primary nav-iten me-3" data-bs-toggle="modal" data-bs-target="#inputUsernameModal" #usernameButton>
-        change username
-      </button>
+    <button type="button" class="btn btn-small btn-primary nav-iten me-3" data-bs-toggle="modal"
+      data-bs-target="#inputUsernameModal" #usernameButton>
+      change username
+    </button>
   </div>
 </nav>
 <div class="container">
@@ -13,23 +14,30 @@
         <div class="card-header">
           <h5 class="card-title">Messages</h5>
         </div>
-        <div class="card-body overflow-y-scroll" style="height: 400px;">
+        <div class="card-body overflow-y-scroll flex-column-reverse d-flex" style="height: 400px;">
           <div class="d-flex flex-column h-100" *ngIf="!connected">
             <div class="alert alert-danger p-2" role="alert" *ngIf="error">
               {{error}}
             </div>
             <div class="spinner-border text-primary m-auto"></div>
           </div>
-          <div *ngIf="connected">
-            <app-message *ngFor="let message of messages" [message]="message" />
-          </div>
+          <app-message *ngFor="let message of (connected ? messages.reverse() : [])" [message]="message" />
         </div>
         <div class="card-footer">
           <form [formGroup]="formGroup" (submit)="sendMessage()">
             <div class="input-group">
-              <textarea class="rounded-2 form-control" rows="{{textareaRow}}" (input)="updateRows()" style="resize: none;" formControlName="message" required></textarea>
+              <textarea 
+                class="rounded-2 form-control" 
+                rows="{{textareaRow}}" 
+                (input)="updateRows()" 
+                (keydown)="onTextKeyDown($event)" 
+                style="resize: none;" 
+                formControlName="message" required>
+              </textarea>
               <div>
-                <button class="btn btn-sm btn-secondary rounded-circle ms-2" [disabled]="!connected"><i class="bi bi-send"></i></button>
+                <button class="btn btn-sm btn-secondary rounded-circle ms-2" [disabled]="!connected">
+                  <i class="bi bi-send"></i>
+                </button>
               </div>
             </div>
           </form>

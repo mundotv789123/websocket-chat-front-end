@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Message, WebsocketService } from './services/websocket.service';
 import { MessagesService } from './services/messages.service';
 import { catchError, retry, throwError, timeout } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +12,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class AppComponent implements OnInit {
   @ViewChild('usernameButton') private usernameButton!: ElementRef<HTMLButtonElement>;
   @ViewChild('audioNotification') private audioNotification!: ElementRef<HTMLAudioElement>;
+  @ViewChild('chatContainer') private chatContainer!: ElementRef<HTMLAudioElement>;
 
   public connected: boolean = false;
   public error: string | false = false;
@@ -87,6 +87,15 @@ export class AppComponent implements OnInit {
   updateRows() {
     let text: string = this.formGroup.controls['message'].value;
     this.textareaRow = text ? text.split("\n").length : 1;
+  }
+
+  onTextKeyDown(event: KeyboardEvent) {
+    if (event.key == "Enter") {
+      if (event.shiftKey)
+        return;
+      event.preventDefault();
+      this.sendMessage();
+    }
   }
  
   sendMessage() {
