@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { MessageComponent } from './components/message/message.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { UsernameFormComponent } from './components/username-form/username-form.component';
 
 @NgModule({
@@ -14,6 +15,7 @@ import { UsernameFormComponent } from './components/username-form/username-form.
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     ReactiveFormsModule
   ],
   providers: [],

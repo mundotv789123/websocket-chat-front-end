@@ -1,6 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Message, WebsocketService } from './services/websocket.service';
+import { MessagesService } from './services/messages.service';
+import { catchError, retry, throwError, timeout } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -18,10 +21,13 @@ export class AppComponent implements OnInit {
   public textareaRow: number = 1;
 
   public formGroup: FormGroup;
-  private websocketService: WebsocketService;
 
-  constructor(websocketService:WebsocketService) { 
+  private websocketService: WebsocketService;
+  private messageService: MessagesService;
+
+  constructor(websocketService: WebsocketService, messageService: MessagesService) { 
     this.websocketService = websocketService;
+    this.messageService = messageService;
     this.formGroup = new FormGroup({
       message: new FormControl('', [Validators.required])
     });
@@ -29,8 +35,24 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.checkUsername();
-    this.loadWebsocketListeners();
-    this.websocketService.openConnection();
+    this.loadMessages();
+  }
+
+  loadMessages() {
+    this.messageService.getMessages().pipe(
+      retry(3),
+      timeout(5000),
+      catchError(() => {
+        this.error = "Erro ao buscar histórico de mensagens..."
+        return throwError(() => new Error(''));
+      })
+    ).subscribe((messages: Message[]) => {
+      messages.forEach(message => {
+        message.me = (message.author == localStorage.getItem('username'));
+        this.messages.push(message);
+      });
+      this.loadWebsocketListeners();
+    });
   }
 
   loadWebsocketListeners() {
@@ -49,6 +71,7 @@ export class AppComponent implements OnInit {
       this.connected = false;
       this.error = "Conexão perdida...";
     };
+    this.websocketService.openConnection();
   }
 
   checkUsername(): boolean {
