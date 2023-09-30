@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.checkUsername();
-    this.loadMessages();
+    this.loadWebsocketListeners();
   }
 
   loadMessages() {
@@ -51,7 +51,6 @@ export class AppComponent implements OnInit {
         message.me = (message.author == localStorage.getItem('username'));
         this.messages.push(message);
       });
-      this.loadWebsocketListeners();
     });
   }
 
@@ -66,6 +65,7 @@ export class AppComponent implements OnInit {
     this.websocketService.onConnect = () => {
       this.connected = true;
       this.error = false;
+      this.loadMessages();
     };
     this.websocketService.onError = () => {
       this.connected = false;
