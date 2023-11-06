@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
     this.websocketService = websocketService;
     this.messageService = messageService;
     this.formGroup = new FormGroup({
-      message: new FormControl('', [Validators.required])
+      message: new FormControl(localStorage.getItem('message_draft'), [Validators.required])
     });
   }
 
@@ -87,6 +87,7 @@ export class AppComponent implements OnInit {
   updateRows() {
     let text: string = this.formGroup.controls['message'].value;
     this.textareaRow = text ? text.split("\n").length : 1;
+    localStorage.setItem('message_draft', text);
   }
 
   onTextKeyDown(event: KeyboardEvent) {
