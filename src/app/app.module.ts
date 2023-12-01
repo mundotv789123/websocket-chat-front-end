@@ -6,6 +6,7 @@ import { MessageComponent } from './components/message/message.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { UsernameFormComponent } from './components/username-form/username-form.component';
+import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { UsernameFormComponent } from './components/username-form/username-form.
   imports: [
     BrowserModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MarkdownModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

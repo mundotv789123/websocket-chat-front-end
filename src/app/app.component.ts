@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Message, WebsocketService } from './services/websocket.service';
 import { MessagesService } from './services/messages.service';
 import { catchError, retry, throwError, timeout } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,8 @@ export class AppComponent implements OnInit {
   @ViewChild('usernameButton') private usernameButton!: ElementRef<HTMLButtonElement>;
   @ViewChild('audioNotification') private audioNotification!: ElementRef<HTMLAudioElement>;
   @ViewChild('chatContainer') private chatContainer!: ElementRef<HTMLAudioElement>;
+
+  public version: string;
 
   public connected: boolean = false;
   public error: string | false = false;
@@ -26,6 +29,7 @@ export class AppComponent implements OnInit {
   private messageService: MessagesService;
 
   constructor(websocketService: WebsocketService, messageService: MessagesService) { 
+    this.version = environment.version;
     this.websocketService = websocketService;
     this.messageService = messageService;
     this.formGroup = new FormGroup({
