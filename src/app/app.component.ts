@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Message, WebsocketService } from './services/websocket.service';
 import { MessagesService } from './services/messages.service';
 import { catchError, retry, throwError, timeout } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,8 @@ export class AppComponent implements OnInit {
   @ViewChild('usernameButton') private usernameButton!: ElementRef<HTMLButtonElement>;
   @ViewChild('audioNotification') private audioNotification!: ElementRef<HTMLAudioElement>;
   @ViewChild('chatContainer') private chatContainer!: ElementRef<HTMLAudioElement>;
+
+  public version: string;
 
   public connected: boolean = false;
   public error: string | false = false;
@@ -26,16 +29,17 @@ export class AppComponent implements OnInit {
   private messageService: MessagesService;
 
   constructor(websocketService: WebsocketService, messageService: MessagesService) { 
+    this.version = environment.version;
     this.websocketService = websocketService;
     this.messageService = messageService;
     this.formGroup = new FormGroup({
-      message: new FormControl('', [Validators.required])
+      message: new FormControl(localStorage.getItem('message_draft'), [Validators.required])
     });
   }
 
   ngOnInit() {
     this.checkUsername();
-    this.loadMessages();
+    this.loadWebsocketListeners();
   }
 
   loadMessages() {
@@ -51,7 +55,6 @@ export class AppComponent implements OnInit {
         message.me = (message.author == localStorage.getItem('username'));
         this.messages.push(message);
       });
-      this.loadWebsocketListeners();
     });
   }
 
@@ -66,6 +69,7 @@ export class AppComponent implements OnInit {
     this.websocketService.onConnect = () => {
       this.connected = true;
       this.error = false;
+      this.loadMessages();
     };
     this.websocketService.onError = () => {
       this.connected = false;
@@ -87,6 +91,7 @@ export class AppComponent implements OnInit {
   updateRows() {
     let text: string = this.formGroup.controls['message'].value;
     this.textareaRow = text ? text.split("\n").length : 1;
+    localStorage.setItem('message_draft', text);
   }
 
   onTextKeyDown(event: KeyboardEvent) {
