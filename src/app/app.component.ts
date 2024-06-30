@@ -46,9 +46,9 @@ export class AppComponent implements OnInit {
     this.messageService.getMessages().pipe(
       retry(3),
       timeout(5000),
-      catchError(() => {
+      catchError((err) => {
         this.error = "Erro ao buscar histórico de mensagens..."
-        return throwError(() => new Error(''));
+        return throwError(err);
       })
     ).subscribe((messages: Message[]) => {
       messages.forEach(message => {
